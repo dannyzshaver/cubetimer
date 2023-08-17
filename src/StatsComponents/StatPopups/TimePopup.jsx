@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import StatisticsItem from '../StatisticsItem';
 
-const TimePopup = ({ solve, onClose, m2TO, whichStat }) => {
+const TimePopup = ({ solve, onClose,whichStat }) => {
         const penaltiesText = solve.plusTwo || solve.DNF ? (solve.plusTwo && solve.DNF ? '+2, DNF' : (solve.DNF ? 'DNF' : '+2')) : 'None';
         const statText = [
             "",
@@ -15,9 +15,10 @@ const TimePopup = ({ solve, onClose, m2TO, whichStat }) => {
                     <button className="close-button" onClick={onClose}>X</button>
                     <p>{statText[whichStat]}</p>
                     <div className="popup-details">
-                        <h2 className="popup-title">Time: <StatisticsItem value={solve.time} m2TO={m2TO} className="times" /></h2>
+                        <h2 className="popup-title">Time: <StatisticsItem value={solve.time} className="times" /></h2>
                         <p className="milliseconds">({solve.time} milliseconds)</p>
                     </div>
+                    <p>Scramble: {solve.scramble}</p>
                     <p>Penalties: {penaltiesText}</p>
                 </div>
             </div>

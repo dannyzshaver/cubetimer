@@ -38,7 +38,7 @@ function formatTime(milliseconds) {
 
 
 
-export function Graph({ solves }) {
+export function Graph({ solves, location }) {
 
   const times = solves.map(solve => solve.time);
   const chartData = {
@@ -46,7 +46,6 @@ export function Graph({ solves }) {
     datasets: [
       {
         label: 'Times:',
-        
         data: times,
         fill: false,
         borderColor: 'rgba(75, 192, 192, 1)',
@@ -94,8 +93,13 @@ export function Graph({ solves }) {
     },
   };
 
+  var graphWidth = 0;
+  location === 1? graphWidth = 260 : graphWidth = 350;
   return (
-    <div style={{ background: 'transparent', padding: '20px', borderRadius: '8px' }}>
+    <div style={{ background: 'transparent', 
+    padding: '20px', 
+    borderRadius: '8px',
+    width: graphWidth }}>
       <Line data={chartData} options={chartOptions} />
     </div>
   );

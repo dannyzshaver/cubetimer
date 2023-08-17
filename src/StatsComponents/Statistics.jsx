@@ -3,19 +3,23 @@ import { useState } from 'react';
 import StatisticsItem from './StatisticsItem';
 import StatPopup from './StatPopups/StatPopup';
 import * as math from 'mathjs';
-export function Statistics({ solves, m2TO }) {
+export function Statistics({ solves }) {
 
   const times = solves.map(solve => solve.time);
   // Initialize the stats array with all zeros
   const stats = Array(11).fill(0);
-  const statInfo = Array(12).fill(null).map((_, index) => ({
-    id: index,
+  const statInfo = Array(11).fill(null).map((_, index) => ({
+    id: index+666,
     time: 0,
     plusTwo: false,
-    DNF: false
+    DNF: false,
+    solves: []
   }));
+  // statInfo.slice(5, 7).solves = Array(3).fill({time:0})
 
+  
 
+  var solveIndex = [0,0]
   if (times.length !== 0) {
     // calculate the best time
     stats[0] = math.min(times);
@@ -23,46 +27,67 @@ export function Statistics({ solves, m2TO }) {
     // calculate the worst time
     stats[1] = math.max(times);
     statInfo[1] = solves.find(solve => solve.time === stats[1]);
-    // // calculate the average time
+    // calculate the average time
     stats[2] = math.mean(times);
-    // // calculate the median time
+    
+    // calculate the median time
     stats[3] = math.median(times);
-    // // calculate the standard deviation
+    
+    // calculate the standard deviation
     stats[4] = math.std(times) * math.sqrt((times.length - 1) / (times.length));
+    
+
   }
   if (times.length > 4) {
-    const lastFiveTimes = times.slice(0, 5);
+    var lastFiveSolves = solves.slice(0, 5);
     // calculate the average of 5
-    stats[5] = math.mean(lastFiveTimes);
+    stats[5] = math.mean(times.slice(0, 5));
     // calculate the average of 3 of 5
-    stats[6] = math.mean(lastFiveTimes.slice().sort((a, b) => a - b).slice(1, -1));
+    stats[6] = math.mean(times.slice(0, 5).slice().sort((a, b) => a - b).slice(1, 4));
     // calculate the best 3 of 5
     for (let i = 0; i <= times.length - 5; i++) {
-      const avgofthree = math.mean(times.slice(i, i + 5).slice().sort((a, b) => a - b).slice(1, 4));
+      const middleThree = times.slice(i, i + 5).slice().sort((a, b) => a - b).slice(1, 4);
+      const avgofthree = math.mean(middleThree);
       if (stats[7] === 0 || stats[7] > avgofthree) {
         stats[7] = avgofthree;
+        var fastestThree = solves.slice(i, i + 5);
+        solveIndex[0] = i;
       }
     }
+    statInfo[5].solves = lastFiveSolves;
+    statInfo[6].solves = lastFiveSolves;
+    statInfo[7].solves = fastestThree;
   }
 
   if (times.length > 11) {
-    const lastTwelveTimes = times.slice(0, 12);
+    var lastTwelveSolves = solves.slice(0, 12);
     // calculate the average of 12
-    stats[8] = math.mean(lastTwelveTimes);
+    stats[8] = math.mean(times.slice(0,12));
     // calculate the average of 10 of 12
-    stats[9] = math.mean(lastTwelveTimes.slice().sort((a, b) => a - b).slice(1, -1));
+    stats[9] = math.mean(times.slice(0, 12).slice().sort((a, b) => a - b).slice(1, 11));
     // calculate the best 10 of 12
     for (let i = 0; i <= times.length - 12; i++) {
-      const avgoftwelve = math.mean(times.slice(i, i + 12).slice().sort((a, b) => a - b).slice(1, 11));
+      const middleTen = times.slice(i, i + 12).slice().sort((a, b) => a - b).slice(1, 11);
+      const avgoftwelve = math.mean(middleTen);
       if (stats[10] === 0 || stats[10] > avgoftwelve) {
         stats[10] = avgoftwelve;
+        var fastestTen = solves.slice(i, i + 12);
+        solveIndex[1] = i;
       }
     }
+    statInfo[8].solves = lastTwelveSolves;
+    statInfo[9].solves = lastTwelveSolves;
+    statInfo[10].solves = fastestTen;
   }
 
+  
   // round every value (milliseconds) to the 10s place, or to the hundreds place in seconds
   const roundedstats = stats.map(time => Math.round(time / 10) * 10);
 
+  for (let ii = 2; ii < 11; ii++) {
+    statInfo[ii].time = roundedstats[ii]
+  }
+    // console.log("statInfo: ",statInfo)
   const statLabels = [
     <em key="label1">Best:</em>,
     <em key="label2">Worst:</em>,
@@ -108,7 +133,6 @@ export function Statistics({ solves, m2TO }) {
   
   const [selectedSolve, setSelectedSolve] = useState({id: 0, time: 0, plusTwo: false, DNF: false});
   const handleTimeClick = (stat) => {
-    console.log("etst")
     if (selectedSolve && selectedSolve.id === stat.id) {
       setSelectedSolve(null); // Close the popup if clicking on the same solve again
     } else {
@@ -127,10 +151,14 @@ export function Statistics({ solves, m2TO }) {
             <li className={borderLabels[index]} key={index}>
               <div title={statHoverInfo[index]} className="statClickForPopup" onClick={() => handleTimeClick(statInfo[index])}>
                 {statLabels[index]}
-                <StatisticsItem value={stat} m2TO={m2TO} classname={""} />
+                <StatisticsItem value={stat} classname={""} />
               </div>
               {selectedSolve && selectedSolve.id === statInfo[index].id && (
-                <StatPopup solve={statInfo[index]} onClose={handleClosePopup} m2TO={m2TO} whichStat={index+1}/>
+                <StatPopup solve={statInfo[index]} 
+                onClose={handleClosePopup} 
+                whichStat={index+1} 
+                numsolves={solves.length}
+                solveIndex={solveIndex}/>
               )}
             </li>
           ))}

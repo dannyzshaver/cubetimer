@@ -1,15 +1,160 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
+import React, { useState, useEffect, useRef } from 'react';
+import StatisticsItem from './StatsComponents/StatisticsItem';
+import * as Scrambler from 'sr-scrambler'
+const Timer = ({functions},settingsOpen) => {
+    const [timerValue, setTimerValue] = useState(0);
+    const [timerColor, setTimerColor] = useState('black');
+    const [mouseDown, setMouseDown] = useState(false);
+    const [spacePressed, setSpacePressed] = useState(false);
 
 
+    const greenTimeoutId = useRef(null);
+    const timerIntervalId = useRef(null);
+    let cubeScramble = useRef(Scrambler.cube());
+    function generateScramble() {
+      let scrambleFunction;
+      if (functions.puzzleSettings.puzzleType === 'megaminx') {
+        scrambleFunction = Scrambler.megaminx;
+      } else if (functions.puzzleSettings.puzzleType === 'pyraminx') {
+        scrambleFunction = Scrambler.pyraminx;
+      } else if (functions.puzzleSettings.puzzleType === 'skewb') {
+        scrambleFunction = Scrambler.skewb;
+      } else if (functions.puzzleSettings.puzzleType === 'square1') {
+        scrambleFunction = Scrambler.square1;
+      } else {
+        scrambleFunction = Scrambler.cube;
+      }
+      
+      if (scrambleFunction) {
+        cubeScramble.current = scrambleFunction(...(functions.puzzleSettings.inputs || []));
+      }
+    }
+    
+    const [scrambleUpdated, setScrambleUpdated] = useState(0);
+    useEffect(() => {
+      // Call the generateScramble function when settings change
+        generateScramble();
+        setScrambleUpdated(a => a+1);
+    }, [settingsOpen, functions.puzzleSettings]);
 
-export function Timer({ timeObject }) {
+    const startPress = () => {
+        setTimerValue(0);
+        setTimerColor('red');
+        setMouseDown(true);
+        
+        greenTimeoutId.current = setTimeout(() => {
+            setTimerColor('green');
+        }, 250);
+        
+    };
+
+    const clearPress = () => {
+        clearTimeout(greenTimeoutId.current);
+        clearTimeout(timerIntervalId.current);
+        setMouseDown(false);
+        setTimerColor('black');
+    };
+
+    const startTimer = () => {
+        setTimerColor('black');
+        timerIntervalId.current = setInterval(() => {
+            setTimerValue((prevValue) => prevValue + 10);
+        }, 10);
+    };
+
+    
+    const handleMouseDown = () => {
+      
+        if (!mouseDown) {
+            startPress();
+        } else {
+          
+            clearPress();
+            
+            if (timerValue > 0) {
+              setSpacePressed(true);
+          }
+        }
+    };
+
+    const handleMouseUp = () => {
+        if (timerColor === 'green') {
+            startTimer();
+        } else {
+            clearPress();
+        }
+    };
+
+
+    useEffect(() => {
+      if (spacePressed && timerValue > 0) {
+        functions.updateSolves(timerValue, cubeScramble.current);
+        generateScramble();
+          // cubeScramble.current = Scrambler.cube()
+          setSpacePressed(false);
+      }
+  }, [spacePressed, functions, timerValue]);
   
-  
-  return (
-    <div id='timerItself' tabIndex={0}>
-      <span>{timeObject.minutes}</span>
-      <span>{timeObject.seconds}</span>.
-      <span>{timeObject.milliseconds}</span>
-    </div>
-  );
-}
+    useEffect(() => {
+
+    const handleKeyDown = (e) => {
+        if (e.key === " " && !spacePressed) {
+            e.preventDefault();
+            handleMouseDown();
+            setSpacePressed(true);
+        }
+    }
+
+    const handleKeyUp = (e) => {
+        if (e.key === " " && spacePressed) {
+            e.preventDefault();
+            handleMouseUp();
+            setSpacePressed(false);
+        }
+    }
+    
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    
+    const object = document.getElementById('the-scramble'); // Replace with your actual object's ID or reference
+    if (object) {
+      object.addEventListener('click', handleScrambleClick);
+    }
+
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+
+      if (object) {
+        object.removeEventListener('click', handleScrambleClick);
+      }
+
+    };
+  }, [spacePressed,timerColor]);
+
+  const handleScrambleClick = () => {
+    functions.deleteSolve(2) // delete nothing to rerender states to change the scramble
+    generateScramble();
+  };
+
+
+    return (
+        <>
+          <h1 className='scramble' onClick={handleScrambleClick}> {cubeScramble.current}</h1>
+          <div
+              className={`interactive-timer ${timerColor}`}
+              onMouseDown={handleMouseDown}
+              onMouseUp={handleMouseUp}
+          >
+              <StatisticsItem value={timerValue} classname={""} />
+          </div>
+        </>
+    );
+};
+
+export default Timer;

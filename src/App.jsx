@@ -1,40 +1,36 @@
 /* eslint-disable react/no-unescaped-entities */
 
-import { useState, useEffect } from 'react';
-import { Statistics } from './Statistics';
-import { Timer } from './Timer';
-import { TimesComponent } from "./TimesComponent";
-import {Graph} from "./Graph"
-import * as Scrambler from 'sr-scrambler'
+import { useState } from 'react';
+import { Statistics } from './StatsComponents/Statistics';
+import Timer from './Timer';
+import SettingsPopup from './SettingsPopup';
+import { Times } from "./StatsComponents/Times";
+import { Graph } from "./StatsComponents/Graph"
+
 
 import "./styles.css"
 
 export default function App() {
 
-  const [timerState, setTimerState] = useState(0);
-  const [milliseconds, setMilliseconds] = useState(0);
   const [solves, setSolves] = useState([]);
 
-  // TODO: Make times a list of components, like times = [ {id, time, plusTwo, DNF, scramble} ]
-  // Where it's {"number", "bool", "bool", "string"}
-  // Use TodoList as a guide
-  // Make App, TimesComponent, Graph, and Statistics work with this change
-  // Figure out how to use a scramble API, and make the scramble change on click
-  // Make it so that clicking on a time (and/maybe the best, worst, best 3 of 5 and best 10 of 12) pops up a screen 
-  //      with the full time, the scramble, the puzzle, and the penalties (+2 DNF) 
-  // Optional: Make the graph not look weird with 0 and 1 times
-  //           Add animations to when a new time gets added and deleted, and maybe to the stats table
-  //           Fix the zoom so it looks good at 100% (Make everything bigger by x1.5)
+// TODO:
+  // Make the graph not look weird with 0 and 1 times
+  // Add animations everywhere
+  // Fix the zoom so it looks good at 100% (Make everything bigger by x1.5)
+  // Implement a settings button with enable WCA inspection, make it look good, add an info button
+  // Organize CSS
 
-  // Later: implement a settings button with enable WCA inspection, make it look good, add an info button, (make it look like ruwix)
+  function deleteSolve(id) {
+    setSolves(currentSolves => {
+      return currentSolves.filter(solve => solve.id != id)
+    })
+  }
 
-  
-    function deleteSolve(id) {
-      setSolves(currentSolves => {
-        return currentSolves.filter(solve => solve.id != id)
-      })
-    }
-  
+  function deleteAllSolves() {
+    setSolves([]);
+  }
+
 
   const togglePlusTwo = (id) => {
     const updatedSolves = solves.map(solve => {
@@ -50,166 +46,82 @@ export default function App() {
 
   const toggleDNF = (id) => {
     const updatedSolves = solves.map(solve =>
-      solve.id === id ? { ...solve, DNF: !solve.DNF} : solve
+      solve.id === id ? { ...solve, DNF: !solve.DNF } : solve
     );
     setSolves(updatedSolves);
   };
-  
-  function updateSolves(time) {
+
+  function updateSolves(time, scramble) {
     return setSolves((currentSolves) => {
-      return [{id: crypto.randomUUID(), time, plusTwo: false, DNF: false}, ...currentSolves]
-    }) 
+      return [{ id: crypto.randomUUID(), time, scramble, plusTwo: false, DNF: false }, ...currentSolves]
+    })
   }
 
-  // timer useeffect
-  useEffect(() => {
-    let interval;
-
-    if (timerState === 3) {
-      interval = setInterval(() => {
-        setMilliseconds(prevMilliseconds => prevMilliseconds + 10);
-      }, 10);
-    }
-
-    return () => clearInterval(interval);
-  }, [timerState]);
-
-  // Change color useEffect
-  useEffect(() => {
-    if (timerState === 1) {
-      const timerComponent = document.getElementById('timerItself');
-      timerComponent.style.backgroundColor = 'red';
-    } else if (timerState === 2) {
-      const timerComponent = document.getElementById('timerItself');
-      timerComponent.style.backgroundColor = 'green';
-    } else {
-      const timerComponent = document.getElementById('timerItself');
-      timerComponent.style.backgroundColor = '#222'
-    }
-  }, [timerState]);
-
-// timer logic useEffect
-  useEffect(() => {
-
-       const handleKeyDown = (event) => {
-      if (event.key === ' ') {
-        event.preventDefault();
-        switch (timerState) {
-          case 0:
-            setTimerState(1);
-            break;
-          case 1:
-            setTimerState(2)
-            // setTimeout(() => setTimerState(2), 250);
-            break;
-          case 2:
-            setTimerState(2);
-            break;
-          case 3:
-            setTimerState(4);
-            updateSolves(milliseconds);
-            break;
-          case 4:
-            setMilliseconds(0);
-            setTimerState(1);
-            break;
-          default:
-            break;
-        }
-      }
-    };
-
-    const handleKeyUp = (event) => {
-      if (event.key === ' ') {
-        switch (timerState) {
-          case 1:
-            setTimerState(0);
-            break;
-          case 2:
-            setTimerState(3);
-            break;
-          default:
-            break;
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-    };
-  }, [milliseconds, timerState]);
-
-  const millisecondsToTimeObject = (milliseconds) => {
-    const totalSeconds = Math.floor(milliseconds / 1000);
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    const remainingMilliseconds = milliseconds % 1000;
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [puzzleSettings, setPuzzleSettings] = useState({
+    puzzleType: '3x3',
+    inputs: [3,20] // Default values for cube scramble
+  });
   
-    const formattedMinutes = minutes > 0 ? minutes.toString().padStart(1, '0') + ':' : '';
-    const formattedSeconds = minutes > 0 ? seconds.toString().padStart(2, '0') : seconds.toString() 
-    const formattedMilliseconds = remainingMilliseconds.toString().padStart(3, '0').slice(0, -1);
-  
-    return {
-      minutes: formattedMinutes,
-      seconds: formattedSeconds,
-      milliseconds: formattedMilliseconds,
-    };
+  const handleSettingsSave = (newSettings) => {
+    setPuzzleSettings(newSettings);
+    setSettingsOpen(false);
   };
-
-
-  const timeObject = millisecondsToTimeObject(milliseconds);
-
-
-
-  // const [cubeScramble, setcubeScramble] = useState(Scrambler.cube());
-  let cubeScramble ="test"
   
-    if (timerState === 0 || timerState === 4) {
-      cubeScramble = Scrambler.cube();
-    }
-    
-    
   return (
-    <>
-      <div className="scramble">{cubeScramble}</div>
 
-      <div className="time">
-        <a title="Hold down the space bar to start the timer!">
-          <Timer timeObject={timeObject}/>
-        </a>
-      </div>
+    <div className="app">
+
+
+      <button className="settings-button" onClick={() => setSettingsOpen(true)}>
+        Settings
+      </button>
+      {settingsOpen && (
+        <>
+          <div className="popup-overlay" onClick={handleSettingsSave} />
+          <SettingsPopup
+            currentSettings={puzzleSettings}
+            onSave={handleSettingsSave}
+          />
+        </>
+      )}
+
+      <a title="Hold down the space bar to start the timer!">
+        <Timer functions={{ updateSolves, deleteSolve, puzzleSettings}}
+          settingsOpen={settingsOpen}
+        />
+      </a>
 
       <div className='wrapStats'>
         <div className='solutionTimes'>
           <div className='panelTitle'>Times</div>
           <div className='panelInner'>
-            <TimesComponent solves={solves} 
-            m2TO={millisecondsToTimeObject} 
-            deleteSolve={deleteSolve} 
-            togglePlusTwo={togglePlusTwo}
-            toggleDNF={toggleDNF}/>
+            <Times className="allTimes"
+              solves={solves}
+              deleteSolve={deleteSolve}
+              deleteAllSolves={deleteAllSolves}
+              togglePlusTwo={togglePlusTwo}
+              toggleDNF={toggleDNF} />
+              <div className='flex-container'>
+            <button className='deleteAll' onClick={deleteAllSolves}>Delete All</button>
+            </div>
           </div>
+
         </div>
 
         <div className='solutionStatistics'>
           <div className='panelTitle'>Stats</div>
           <div className='panelInner'>
-      
-              <Statistics solves = {solves} timerState={timerState} m2TO={millisecondsToTimeObject}/>
-          
+            <Statistics solves={solves} />
           </div>
         </div>
 
 
         <div className='performanceGraph'>
           <div className='panelTitle'>Graph</div>
-          <Graph solves={[...solves].reverse()}/>
+          <Graph solves={[...solves].reverse()} location={1} />
         </div>
       </div>
-    </>
+    </div>
   )
 }
