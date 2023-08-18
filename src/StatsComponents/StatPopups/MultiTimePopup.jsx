@@ -35,8 +35,8 @@ const MultiTimePopup = ({ solvesContainer, onClose, whichStat, solveIndex, numso
     }
     
 
-    console.log('startingIndex: ',startingIndex)
-    console.log(numsolves-solveIndex[0])
+    // console.log('startingIndex: ',startingIndex)
+    // console.log(numsolves-solveIndex[0])
     const SolveList = ({ solves }) => {
         return (
             <div className='statPopupTimeBox'>
@@ -53,18 +53,18 @@ const MultiTimePopup = ({ solvesContainer, onClose, whichStat, solveIndex, numso
     };
 
     return (
-        <div className="popup-container">
-            <div className="popup-overlay" onClick={onClose}></div>
-            <div className="popup-content">
-                <button className="close-button" onClick={onClose}>X</button>
-                <div className="popup-details">
-                    <h2 className="popup-title">{statText[whichStat - 6]}<StatisticsItem value={solvesContainer.time} className="times" /></h2>
+        <div className="popupContainer">
+            <div className="popupOverlay" onClick={onClose}></div>
+            <div className="popupContent">
+                <button className="closeButton" onClick={onClose}>X</button>
+                <div className="popupDetails">
+                    <h2 className="popupTitle">{statText[whichStat - 6]}<StatisticsItem value={solvesContainer.time} className="times" /></h2>
                     <p className="milliseconds">({solvesContainer.time} milliseconds)</p>
                 </div>
                 <p >{statText[whichStat]}</p>
-                <div className='popup-details'>
+                <div className='popupDetails'>
                     <SolveList solves={solvesContainer.solves} />
-                    <Graph solves={[...solvesContainer.solves].reverse()} location={2}/>
+                    <Graph solves={[...solvesContainer.solves].reverse()}/>
                 </div>
             </div>
         </div>

@@ -38,7 +38,7 @@ function formatTime(milliseconds) {
 
 
 
-export function Graph({ solves, location }) {
+export function Graph({ solves }) {
 
   const times = solves.map(solve => solve.time);
   const chartData = {
@@ -60,6 +60,18 @@ export function Graph({ solves, location }) {
     maintainAspectRatio: false,
     scales: {
       x: {
+        title: {
+          display: true, 
+          text: 'solve #', 
+          color: 'rgba(255, 255, 255, 1)',
+          font: {
+            size: 16,
+            weight: 'bold',
+          },
+          padding: {
+            bottom: 10,
+          },
+        },
         grid: {
           color: 'rgba(255, 255, 255, 0.1)',
         },
@@ -68,11 +80,23 @@ export function Graph({ solves, location }) {
           maxRotation: 0,
           minRotation: 0, 
           font: {
-            size: 8, // Set font size for y-axis labels
+            size: 16, 
           },
         },
       },
       y: {
+        title: {
+          display: true, 
+          text: 'time', 
+          color: 'rgba(255, 255, 255, 1)',
+          font: {
+            size: 16,
+            weight: "bold",
+          },
+          padding: {
+            bottom: 10,
+          },
+        },
         grid: {
           color: 'rgba(255, 255, 255, 0.1)',
         },
@@ -80,7 +104,7 @@ export function Graph({ solves, location }) {
           color: 'rgba(255, 255, 255, 1)',
           callback: (value) => formatTime(value),
           font: {
-            size: 8, // Set font size for y-axis labels
+            size: 16,
           },
         },
       },
@@ -88,18 +112,16 @@ export function Graph({ solves, location }) {
     
     plugins: {
       legend: {
-        display: false, // Hide the legend box
+        display: false,
       },
     },
   };
 
-  var graphWidth = 0;
-  location === 1? graphWidth = 260 : graphWidth = 350;
   return (
-    <div style={{ background: 'transparent', 
-    padding: '20px', 
-    borderRadius: '8px',
-    width: graphWidth }}>
+    <div className="graph" style={{ background: 'transparent', 
+    padding: '1.25rem', 
+    borderRadius: '0.5rem',
+  }}>
       <Line data={chartData} options={chartOptions} />
     </div>
   );

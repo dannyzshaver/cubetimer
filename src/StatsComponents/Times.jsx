@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import StatisticsItem from './StatisticsItem';
 import StatPopup from './StatPopups/StatPopup';
-
+import "./StatsComponents.css"
 export function Times({ solves, deleteSolve, togglePlusTwo, toggleDNF }) {
 
     const handleDelete = (id) => {
@@ -52,7 +52,7 @@ return (
                     
                     <span className='timeIndexes' >{solves.length - index}:</span>
                     <a title="Click to view the full time and scramble!" className={"clickforpopup"} onClick={() => handleTimeClick(solve)}>
-                        <StatisticsItem value={solve.time} className={"times"}/>
+                        <StatisticsItem value={solve.time} classname={"times"}/>
                     </a>
                     
                     {selectedSolve && selectedSolve.id === solve.id && (

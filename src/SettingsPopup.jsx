@@ -1,11 +1,10 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-
+import "./StatsComponents/StatPopups/StatPopups.css"
 const SettingsPopup = ({ currentSettings, onSave }) => {
 
     const [puzzleType, setPuzzleType] = useState(currentSettings.puzzleType);
-    const [inputs, setInputs] = useState([]);
     
     const handleSave = () => {
         
@@ -31,13 +30,13 @@ const SettingsPopup = ({ currentSettings, onSave }) => {
 
 
     return (
-        <div className='popup-container"'>
-            <div className="popup-overlay" onClick={handleSave}></div>
+        <div className='popupContainer"'>
+            <div className="popupOverlay" onClick={handleSave}></div>
             <div className="settings-popup">
-            <button className="close-button" onClick={handleSave}>X</button>
-            <h2>Settings</h2>
-            <label>Select Puzzle Type:</label>
-            <select value={puzzleType} onChange={(e) => setPuzzleType(e.target.value)}>
+            <button className="closeButton" onClick={handleSave}>X</button>
+            <h1>Settings</h1>
+            <label className='popupTimeInfo'>{"Select Puzzle Type: "}</label>
+            <select className="dropbtn" value={puzzleType} onChange={(e) => setPuzzleType(e.target.value)}>
                     <option value="2x2">2x2</option>
                     <option value="3x3">3x3</option>
                     <option value="4x4">4x4</option>

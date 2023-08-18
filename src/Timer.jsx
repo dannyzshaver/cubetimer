@@ -67,7 +67,7 @@ const Timer = ({functions},settingsOpen) => {
 
     
     const handleMouseDown = () => {
-      
+      console.log("Clicked!!")
         if (!mouseDown) {
             startPress();
         } else {
@@ -144,8 +144,8 @@ const Timer = ({functions},settingsOpen) => {
 
 
     return (
-        <>
-          <h1 className='scramble' onClick={handleScrambleClick}> {cubeScramble.current}</h1>
+        <div className='scrambleAndTimer'>
+          <h1 title="Hold down the space bar to start the timer!" className='scramble' onClick={handleScrambleClick}> {cubeScramble.current}</h1>
           <div
               className={`interactive-timer ${timerColor}`}
               onMouseDown={handleMouseDown}
@@ -153,7 +153,7 @@ const Timer = ({functions},settingsOpen) => {
           >
               <StatisticsItem value={timerValue} classname={""} />
           </div>
-        </>
+        </div>
     );
 };
 

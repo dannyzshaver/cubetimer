@@ -2,7 +2,7 @@
 import TimePopup from './TimePopup';
 import MeanMedStdPopup from './MeanMedStdPopup' 
 import MultiTimePopup from './MultiTimePopup';
-
+import './StatPopups.css'
 const StatPopup = ({ solve, onClose, whichStat, numsolves, solveIndex }) => {
     // console.log(whichStat, solve)
     if (whichStat < 3) {

@@ -14,10 +14,9 @@ export default function App() {
 
   const [solves, setSolves] = useState([]);
 
-// TODO:
+  // TODO:
   // Make the graph not look weird with 0 and 1 times
   // Add animations everywhere
-  // Fix the zoom so it looks good at 100% (Make everything bigger by x1.5)
   // Implement a settings button with enable WCA inspection, make it look good, add an info button
   // Organize CSS
 
@@ -60,43 +59,44 @@ export default function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [puzzleSettings, setPuzzleSettings] = useState({
     puzzleType: '3x3',
-    inputs: [3,20] // Default values for cube scramble
+    inputs: [3, 20] // Default values for cube scramble
   });
-  
+
   const handleSettingsSave = (newSettings) => {
     setPuzzleSettings(newSettings);
     setSettingsOpen(false);
   };
-  
+
   return (
 
     <div className="app">
 
+      <div className='settingsButtonContainer'>
+        <button className="settingsButton" onClick={() => setSettingsOpen(true)}>
+          Settings
+        </button>
+        {settingsOpen && (
+          <>
+            <div className="popup-overlay" onClick={handleSettingsSave} />
+            <SettingsPopup
+              currentSettings={puzzleSettings}
+              onSave={handleSettingsSave}
+            />
+          </>
+        )}
+      </div>
 
-      <button className="settings-button" onClick={() => setSettingsOpen(true)}>
-        Settings
-      </button>
-      {settingsOpen && (
-        <>
-          <div className="popup-overlay" onClick={handleSettingsSave} />
-          <SettingsPopup
-            currentSettings={puzzleSettings}
-            onSave={handleSettingsSave}
-          />
-        </>
-      )}
-
-      <a title="Hold down the space bar to start the timer!">
-        <Timer functions={{ updateSolves, deleteSolve, puzzleSettings}}
+      <div>
+        <Timer functions={{ updateSolves, deleteSolve, puzzleSettings }}
           settingsOpen={settingsOpen}
         />
-      </a>
+      </div>
 
       <div className='wrapStats'>
         <div className='solutionTimes'>
           <div className='panelTitle'>Times</div>
           <div className='panelInner'>
-            <Times className="allTimes"
+            <Times
               solves={solves}
               deleteSolve={deleteSolve}
               deleteAllSolves={deleteAllSolves}
@@ -117,11 +117,12 @@ export default function App() {
         </div>
 
 
-        <div className='performanceGraph'>
+        <div className='graphContainer'>
           <div className='panelTitle'>Graph</div>
-          <Graph solves={[...solves].reverse()} location={1} />
+          <Graph solves={[...solves].reverse()} />
         </div>
       </div>
+
     </div>
   )
 }

@@ -9,17 +9,17 @@ const TimePopup = ({ solve, onClose,whichStat }) => {
             "Your Worst Time:",
         ]
         return (
-            <div className="popup-container">
-                <div className="popup-overlay" onClick={onClose}></div>
-                <div className="popup-content">
-                    <button className="close-button" onClick={onClose}>X</button>
-                    <p>{statText[whichStat]}</p>
-                    <div className="popup-details">
-                        <h2 className="popup-title">Time: <StatisticsItem value={solve.time} className="times" /></h2>
+            <div className="popupContainer">
+                <div className="popupOverlay" onClick={onClose}></div>
+                <div className="popupContent">
+                    <button className="closeButton" onClick={onClose}>X</button>
+                    <div className="milliseconds">{statText[whichStat]}</div>
+                    <div className="popupDetails">
+                        <h2 className="popupTitle">Time: <StatisticsItem value={solve.time} className="times" /></h2>
                         <p className="milliseconds">({solve.time} milliseconds)</p>
                     </div>
-                    <p>Scramble: {solve.scramble}</p>
-                    <p>Penalties: {penaltiesText}</p>
+                    <div className='popupTimeInfo'>Scramble: {solve.scramble}</div>
+                    <div className='popupTimeInfo'>Penalties: {penaltiesText}</div>
                 </div>
             </div>
         );

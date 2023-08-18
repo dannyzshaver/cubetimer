@@ -1,0 +1,112 @@
+
+
+  .popupContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; 
+  }
+
+  .popupOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+    z-index: 1001; /* Make the overlay appear above the popup content */
+  }
+
+  .popupContent {
+    background-color: #555;
+    padding: 1rem;
+    margin: 1rem;
+    max-width:800px;
+    border-radius: 12px;
+    box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1002; /* Make the content appear above the overlay */
+    position: relative;
+    user-select:text;
+    max-height: calc(100% - 2rem);
+    overflow: auto;
+
+  }
+  
+  .popupDetails {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: 1.75rem;
+  }
+  
+  .popupTitle {
+    line-height: 2.5rem;
+    margin:0;
+    margin-right: 2.8rem;
+    
+  }
+
+  .popupTimeInfo {
+    font-size: 1.25rem;
+    padding-top: 1.25rem;
+  }
+
+  .closeButton {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 8px 15px;
+    border-radius: 50%;
+    font-size: 25px;
+    font-weight: bold;
+  
+    background-color: transparent;
+    color:#ff2222;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    user-select: none;
+  }
+
+  .closeButton:hover {
+    background-color: rgba(100,20,20);
+    transform: scale(1.05);
+  }
+
+  
+.milliseconds {
+  text-align: center;
+    margin: 0;
+    margin-right: 45px;
+    color: #aaa;
+    font-size: 1.125rem;
+  }
+
+  .statPopupTimeBox {
+    display: inline-block;
+    width: 225px;
+  }
+
+  .statPopupTimes {
+    display: inline-block;
+    text-align: left;
+    margin-left: 1rem;
+  }
+
+  .statPopupIndexes {
+    display: inline-block;
+    width: 30px;
+    color: #ccc;
+    font-size: 18px;
+    text-align: right;
+  }
+  

@@ -121,13 +121,13 @@ export function Statistics({ solves }) {
     "",
     "",
     "",
-    "lineBelow",
+    "lineBelowStats",
     "",
     "",
-    "lineBelow",
+    "lineBelowStats",
     "",
     "",
-    "lineBelow"
+    "lineBelowStats"
   ];
 
   
@@ -145,7 +145,6 @@ export function Statistics({ solves }) {
     };
 
     return (
-      <div>
         <ul>
           {roundedstats.map((stat, index) => (
             <li className={borderLabels[index]} key={index}>
@@ -160,9 +159,9 @@ export function Statistics({ solves }) {
                 numsolves={solves.length}
                 solveIndex={solveIndex}/>
               )}
+              <div className='box'></div>
             </li>
           ))}
         </ul>
-      </div>
     );
   }
