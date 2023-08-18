@@ -13,7 +13,7 @@ const Timer = ({functions},settingsOpen) => {
     const greenTimeoutId = useRef(null);
     const timerIntervalId = useRef(null);
     let cubeScramble = useRef(Scrambler.cube());
-    
+
     function generateScramble() {
       let scrambleFunction;
       if (functions.puzzleSettings.puzzleType === 'megaminx') {
@@ -87,14 +87,15 @@ const Timer = ({functions},settingsOpen) => {
         }
     };
 
-    const handleTouchStart = () => {
-        handleMouseDown();
-    };
+    const handleTouchStart = (e) => {
+      e.preventDefault(); // Prevent default touch behavior
+      handleMouseDown();
+  };
   
-    const handleTouchEnd = () => {
-        handleMouseUp();
-    };
-  
+  const handleTouchEnd = (e) => {
+      e.preventDefault(); // Prevent default touch behavior
+      handleMouseUp();
+  };
 
     useEffect(() => {
       if (spacePressed && timerValue > 0) {
