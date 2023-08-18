@@ -10,10 +10,10 @@ const Timer = ({functions},settingsOpen) => {
     const [mouseDown, setMouseDown] = useState(false);
     const [spacePressed, setSpacePressed] = useState(false);
 
-
     const greenTimeoutId = useRef(null);
     const timerIntervalId = useRef(null);
     let cubeScramble = useRef(Scrambler.cube());
+    
     function generateScramble() {
       let scrambleFunction;
       if (functions.puzzleSettings.puzzleType === 'megaminx') {
@@ -67,7 +67,6 @@ const Timer = ({functions},settingsOpen) => {
 
     
     const handleMouseDown = () => {
-      console.log("Clicked!!")
         if (!mouseDown) {
             startPress();
         } else {
@@ -88,6 +87,14 @@ const Timer = ({functions},settingsOpen) => {
         }
     };
 
+    const handleTouchStart = () => {
+        handleMouseDown();
+    };
+  
+    const handleTouchEnd = () => {
+        handleMouseUp();
+    };
+  
 
     useEffect(() => {
       if (spacePressed && timerValue > 0) {
@@ -116,32 +123,32 @@ const Timer = ({functions},settingsOpen) => {
         }
     }
     
-
+  
+  
+  
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
-    
-    const object = document.getElementById('the-scramble'); // Replace with your actual object's ID or reference
-    if (object) {
-      object.addEventListener('click', handleScrambleClick);
-    }
 
+    const object1 = document.getElementById('the-scramble');
+
+    if (object1) {
+      object1.addEventListener('click', handleScrambleClick);
+    } 
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
 
-      if (object) {
-        object.removeEventListener('click', handleScrambleClick);
-      }
-
-    };
+      if (object1) {
+        object1.removeEventListener('click', handleScrambleClick);
+      }     
+    }
   }, [spacePressed,timerColor]);
 
   const handleScrambleClick = () => {
-    functions.deleteSolve(2) // delete nothing to rerender states to change the scramble
+    functions.deleteSolve(666) // delete nothing to rerender states to change the scramble
     generateScramble();
   };
-
 
     return (
         <div className='scrambleAndTimer'>
@@ -150,6 +157,8 @@ const Timer = ({functions},settingsOpen) => {
               className={`interactive-timer ${timerColor}`}
               onMouseDown={handleMouseDown}
               onMouseUp={handleMouseUp}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
           >
               <StatisticsItem value={timerValue} classname={""} />
           </div>
