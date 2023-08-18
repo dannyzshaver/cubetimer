@@ -38,19 +38,38 @@ const MultiTimePopup = ({ solvesContainer, onClose, whichStat, solveIndex, numso
     // console.log('startingIndex: ',startingIndex)
     // console.log(numsolves-solveIndex[0])
     const SolveList = ({ solves }) => {
+        let crossedOutSmallest = false;
+        let crossedOutLargest = false;
+    
         return (
             <div className='statPopupTimeBox'>
-                {solves.map((solve, index) => (
-                    <div key={solve.id}>
-                        <span className='statPopupIndexes'>{startingIndex - index}:</span>
-                        <div className='statPopupTimes'>
-                            <StatisticsItem value={solve.time} classname={solve.time === smallestTime || solve.time === largestTime ? 'crossed-out' : ''} />
+                {solves.map((solve, index) => {
+                    const isSmallestTime = solve.time === smallestTime && !crossedOutSmallest;
+                    const isLargestTime = solve.time === largestTime && !crossedOutLargest;
+    
+                    if (isSmallestTime) {
+                        crossedOutSmallest = true;
+                    }
+                    if (isLargestTime) {
+                        crossedOutLargest = true;
+                    }
+    
+                    return (
+                        <div key={solve.id}>
+                            <span className='statPopupIndexes'>{startingIndex - index}:</span>
+                            <div className='statPopupTimes'>
+                                <StatisticsItem
+                                    value={solve.time}
+                                    classname={isSmallestTime || isLargestTime ? 'crossed-out' : ''}
+                                />
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
         );
     };
+    
 
     return (
         <div className="popupContainer">
@@ -61,10 +80,10 @@ const MultiTimePopup = ({ solvesContainer, onClose, whichStat, solveIndex, numso
                     <h2 className="popupTitle">{statText[whichStat - 6]}<StatisticsItem value={solvesContainer.time} className="times" /></h2>
                     <p className="milliseconds">({solvesContainer.time} milliseconds)</p>
                 </div>
-                <p >{statText[whichStat]}</p>
+                <big>{statText[whichStat]}</big>
                 <div className='popupDetails'>
                     <SolveList solves={solvesContainer.solves} />
-                    <Graph solves={[...solvesContainer.solves].reverse()}/>
+                    <Graph solves={[...solvesContainer.solves].reverse()} numTimes={whichStat < 9 ? 5 : 12}/>
                 </div>
             </div>
         </div>

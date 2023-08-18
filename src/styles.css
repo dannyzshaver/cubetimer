@@ -31,10 +31,13 @@ li {
   vertical-align: top;
   margin: 1rem;
   user-select: none;
+  
 }
 
-.solutionStatistics ul {
+.solutionStatistics .panelInner ul {
+  height: 25rem;
   list-style: none;
+  overflow: hidden;
 }
 
 .solutionStatistics ul li {
@@ -61,7 +64,8 @@ li {
   width: 24.375rem;
   vertical-align: top;
   margin: 1rem;
-  
+  height: fit-content;
+
 }
 
 .timelistcomponent {
@@ -80,14 +84,10 @@ li {
 
 
 
-
-
-
-
 .graphContainer {
   background-color: #555;
   width: 24.375rem;
-  height:18rem;
+  height:fit-content;
   vertical-align: top;
   margin: 1rem;
   align-items: center;
@@ -132,12 +132,12 @@ li {
 }
 
 .panelInner {
-
   text-align: center;
 }
 
 .panelInner ul {
-  height: 21.5625rem;
+  height: fit-content;
+  max-height: 21rem;
   overflow: auto;
 } 
 
@@ -224,11 +224,13 @@ li {
 
 .dropbtn {
   background-color: #333;
+  font-size: 1.2rem;
   color: white;
   border: none;
-  padding: 0.2rem 0.2rem;
+  padding: 0.5rem 0.5rem;
   border-radius: 0.5rem;
   cursor: pointer;
+  margin-top:1rem;
 }
 
 .dropbtn option {
@@ -245,14 +247,23 @@ li {
   background-color: #999;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: .5rem;
   cursor: pointer;
-  font-size: 24px;
+  font-size: 1.5rem;
   outline: none;
-  margin-bottom: 15px;
-  }
+  padding:.2rem;
+  margin-bottom: 1rem;
+  user-select: none;
+}
+
 .deleteAll:hover {
   background-color: #484848;
+}
+
+.noTimesText {
+  font-size:1.2rem;
+  margin-bottom: 1rem;
+  font-style: oblique;
 }
 
 .scrambleAndTimer {
@@ -269,6 +280,10 @@ li {
 
 .box {
   width: 6rem;
+}
+
+button {
+  padding: 0;
 }
 
 /* Media queries for adjusting layout as screen size changes */

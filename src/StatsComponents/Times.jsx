@@ -67,7 +67,6 @@ return (
                     onClick={() => handleDNF(solve.id)}>
                         DNF
                     </button>
-
                     <button className='delbtn' onClick={() => handleDelete(solve.id)}>x</button>
                 </li>
 

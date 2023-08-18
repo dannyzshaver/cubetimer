@@ -20,7 +20,7 @@ const MeanMedStdPopup = ({ solve, onClose, whichStat, numsolves }) => {
                         <h2 className="popupTitle">{statText[whichStat-3]}<StatisticsItem value={solve.time} className="times" /></h2>
                         <p className="milliseconds">({solve.time} milliseconds)</p>
                     </div>
-                    <p>{statText[whichStat] + numsolves + " solves"}</p>
+                    <big>{statText[whichStat] + numsolves + " solves"}</big>
                 </div>
             </div>
         );

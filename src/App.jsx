@@ -102,9 +102,11 @@ export default function App() {
               deleteAllSolves={deleteAllSolves}
               togglePlusTwo={togglePlusTwo}
               toggleDNF={toggleDNF} />
-              <div className='flex-container'>
-            <button className='deleteAll' onClick={deleteAllSolves}>Delete All</button>
-            </div>
+            
+            {solves.length === 0 && (<div className='noTimesText'>No times</div>)}
+            {solves.length > 1 && (<button className='deleteAll' onClick={deleteAllSolves}>Delete All</button>)}
+            
+            
           </div>
 
         </div>
@@ -119,7 +121,7 @@ export default function App() {
 
         <div className='graphContainer'>
           <div className='panelTitle'>Graph</div>
-          <Graph solves={[...solves].reverse()} />
+          <Graph solves={[...solves].reverse()} numTimes={2} />
         </div>
       </div>
 

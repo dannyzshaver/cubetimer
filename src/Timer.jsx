@@ -10,6 +10,7 @@ const Timer = ({functions},settingsOpen) => {
     const [mouseDown, setMouseDown] = useState(false);
     const [spacePressed, setSpacePressed] = useState(false);
 
+    const [prevPuzType,setPrevPuzType] = useState('3x3')
     const greenTimeoutId = useRef(null);
     const timerIntervalId = useRef(null);
     let cubeScramble = useRef(Scrambler.cube());
@@ -35,9 +36,13 @@ const Timer = ({functions},settingsOpen) => {
     
     const [scrambleUpdated, setScrambleUpdated] = useState(0);
     useEffect(() => {
-      // Call the generateScramble function when settings change
-        generateScramble();
-        setScrambleUpdated(a => a+1);
+        console.log(functions.puzzleSettings.puzzleType)
+        console.log("prevPuzType: ",prevPuzType)
+        if (functions.puzzleSettings.puzzleType != prevPuzType)    {
+          generateScramble();
+          setScrambleUpdated(a => a+1);
+          setPrevPuzType(functions.puzzleSettings.puzzleType);
+        }   
     }, [settingsOpen, functions.puzzleSettings]);
 
     const startPress = () => {
@@ -102,7 +107,7 @@ const Timer = ({functions},settingsOpen) => {
         functions.updateSolves(timerValue, cubeScramble.current);
         generateScramble();
           // cubeScramble.current = Scrambler.cube()
-          setSpacePressed(false);
+        setSpacePressed(false);
       }
   }, [spacePressed, functions, timerValue]);
   
@@ -124,9 +129,6 @@ const Timer = ({functions},settingsOpen) => {
         }
     }
     
-  
-  
-  
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
 
