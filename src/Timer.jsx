@@ -66,8 +66,8 @@ const Timer = ({functions},settingsOpen) => {
     const startTimer = () => {
         setTimerColor('black');
         timerIntervalId.current = setInterval(() => {
-            setTimerValue((prevValue) => prevValue + 10);
-        }, 10);
+            setTimerValue((prevValue) => prevValue + 20);
+        }, 20);
     };
 
     
