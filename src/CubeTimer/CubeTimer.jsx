@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Statistics } from './StatsComponents/Statistics';
 import Timer from './Timer';
 import SettingsPopup from './SettingsPopup';
+import InfoPopup from './InfoPopup';
 import { Times } from "./StatsComponents/Times";
 import { Graph } from "./StatsComponents/Graph"
 
@@ -14,11 +15,9 @@ export default function CubeTimer() {
 
   const [solves, setSolves] = useState([]);
 
-  // TODO:
-  // Make the graph not look weird with 0 and 1 times
+  // Todo?
   // Add animations everywhere
-  // Implement a settings button with enable WCA inspection, make it look good, add an info button
-  // Organize CSS
+  // Enable WCA inspection
 
   function deleteSolve(id) {
     setSolves(currentSolves => {
@@ -56,22 +55,39 @@ export default function CubeTimer() {
     })
   }
 
-  const [settingsOpen, setSettingsOpen] = useState(false);
   const [puzzleSettings, setPuzzleSettings] = useState({
     puzzleType: '3x3',
     inputs: [3, 20] // Default values for cube scramble
   });
 
+
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const handleSettingsSave = (newSettings) => {
     setPuzzleSettings(newSettings);
     setSettingsOpen(false);
   };
 
+  const [infoOpen, setInfoOpen] = useState(false);
+  const handleInfoClose = () => {
+    setInfoOpen(false);
+  }
   return (
 
     <div className="cubeTimer">
 
-      <div className='settingsButtonContainer'>
+      <div>
+        <button className="infoButton" onClick={() => setInfoOpen(true)}>
+          Info
+        </button>
+        {infoOpen && (
+          <>
+            <div className="popup-overlay"/>
+            <InfoPopup handleInfoClose={handleInfoClose}/>
+          </>
+        )}
+      </div>
+
+      <div>
         <button className="settingsButton" onClick={() => setSettingsOpen(true)}>
           Settings
         </button>
@@ -102,11 +118,11 @@ export default function CubeTimer() {
               deleteAllSolves={deleteAllSolves}
               togglePlusTwo={togglePlusTwo}
               toggleDNF={toggleDNF} />
-            
+
             {solves.length === 0 && (<div className='noTimesText'>No times</div>)}
             {solves.length > 1 && (<button className='deleteAll' onClick={deleteAllSolves}>Delete All</button>)}
-            
-            
+
+
           </div>
 
         </div>

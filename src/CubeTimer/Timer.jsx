@@ -152,7 +152,7 @@ const Timer = ({ functions }, settingsOpen) => {
 
   return (
     <div className='scrambleAndTimer'>
-      <h1 title="Hold down the space bar to start the timer!" className='scramble' onClick={handleScrambleClick}> {cubeScramble.current}</h1>
+      <h1 className='scramble' onClick={handleScrambleClick}> {cubeScramble.current}</h1>
       <div
         className={`interactive-timer ${timerColor}`}
         onMouseDown={handleMouseDown}
@@ -160,7 +160,7 @@ const Timer = ({ functions }, settingsOpen) => {
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        <StatisticsItem value={timerValue} classname={""} />
+        < StatisticsItem value={timerValue} classname={""} />
       </div>
     </div>
   );
